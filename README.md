@@ -1,5 +1,7 @@
 # Northfield Lakehouse Sprint
 
+[![6-Week Plan](https://img.shields.io/badge/6--week%20plan-view%20artifact-1F7A6C?style=flat-square)](https://claude.ai/code/artifact/b2a03db2-2821-4192-ac0c-749113537d40)
+
 A Lakehouse + ML system built over six weeks while preparing for the Databricks Certified Data Engineer Professional and Machine Learning Professional exams. The full week-by-week plan lives in [this artifact](https://claude.ai/code/artifact/b2a03db2-2821-4192-ac0c-749113537d40); this repo is where the plan turns into evidence.
 
 Northfield Commerce is a fictional retailer. The three source feeds (clickstream, orders, inventory), the medallion pipeline, and the two downstream models are the reference system every decision below is made about.
