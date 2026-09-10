@@ -10,6 +10,7 @@ Northfield Commerce is a fictional retailer. The three source feeds (clickstream
 
 | ADR | Decision | Status | Week |
 |---|---|---|---|
+| [ADR-000](docs/adr/ADR-000-catalog-schema-layout.md) | One catalog per environment, schemas for the medallion layers | Accepted | 1 |
 | [ADR-001](docs/adr/ADR-001-ingestion-pattern-per-source.md) | Auto Loader for clickstream/orders, batch for inventory | Proposed | 1 |
 | [ADR-002](docs/adr/ADR-002-clustering-strategy-orders-fact.md) | Liquid Clustering vs. Z-Order on the orders fact | Planned | 2 |
 | [ADR-003](docs/adr/ADR-003-pii-governance-model.md) | Column masking via dynamic views | Planned | 3 |
@@ -20,7 +21,7 @@ Status moves `Planned → Proposed → Accepted` as each decision gets made and 
 
 ## Status
 
-Week 1 — workspace not provisioned yet (Databricks trial being set up on AWS). Source simulators are built and tested locally in the meantime so Week 1 isn't blocked on that.
+Week 1 — workspace is live (AWS-backed Databricks trial), Unity Catalog metastore, `northfield_dev` catalog, and `bronze`/`silver`/`gold` schemas are provisioned. Source simulators are built and tested. Next: Auto Loader ingestion into Bronze.
 
 ## Structure
 
@@ -29,6 +30,7 @@ src/ingestion/             the three source simulators (clickstream, orders CDC,
 tests/                     pytest suite for the simulators
 data/raw/                  simulator output, gitignored — regenerate anytime
 docs/
+  infrastructure.md        AWS + Databricks resource reference (names, ARNs, no secrets)
   adr/                     one file per architectural decision, plus template.md
   case-studies/            the two-part portfolio narrative, plus template.md
   model-cards/             one per model, plus template.md
@@ -50,7 +52,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
 .venv/bin/pytest
 ```
 
-Once the workspace exists, `data/raw/` gets uploaded to a Unity Catalog volume (or cloud storage path) and Auto Loader picks it up from there — the simulators don't change.
+`data/raw/` uploads to a Unity Catalog volume under `northfield_dev`, and Auto Loader watches that path from there — the simulators themselves don't change.
 
 Every `docs/*/template.md` is reusable beyond this project — copy it for the next decision, the next model, the next pipeline.
 

@@ -8,3 +8,6 @@ data/raw/
 
 # Databricks CLI / bundle local state
 .databricks/
+
+# never commit local secrets
+.env
