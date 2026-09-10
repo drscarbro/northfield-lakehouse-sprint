@@ -18,9 +18,16 @@ Northfield Commerce is a fictional retailer. The three source feeds (clickstream
 
 Status moves `Planned → Proposed → Accepted` as each decision gets made and backed with evidence. Never skip straight to `Accepted` without the Evidence section filled in — an ADR without evidence is a guess with a template around it.
 
+## Status
+
+Week 1 — workspace not provisioned yet (Databricks trial being set up on AWS). Source simulators are built and tested locally in the meantime so Week 1 isn't blocked on that.
+
 ## Structure
 
 ```
+src/ingestion/             the three source simulators (clickstream, orders CDC, inventory)
+tests/                     pytest suite for the simulators
+data/raw/                  simulator output, gitignored — regenerate anytime
 docs/
   adr/                     one file per architectural decision, plus template.md
   case-studies/            the two-part portfolio narrative, plus template.md
@@ -28,6 +35,22 @@ docs/
   data-quality-contracts/  one per pipeline stage, plus template.md
 diagrams/                  exported architecture diagrams, one per week's system state
 ```
+
+## Local dev
+
+```
+python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
+
+# generate a batch of raw source data
+.venv/bin/python -m src.ingestion.clickstream_source --batches 5 --events-per-batch 200
+.venv/bin/python -m src.ingestion.orders_source --batches 5 --orders-per-batch 50
+.venv/bin/python -m src.ingestion.inventory_source
+
+# run the test suite
+.venv/bin/pytest
+```
+
+Once the workspace exists, `data/raw/` gets uploaded to a Unity Catalog volume (or cloud storage path) and Auto Loader picks it up from there — the simulators don't change.
 
 Every `docs/*/template.md` is reusable beyond this project — copy it for the next decision, the next model, the next pipeline.
 
