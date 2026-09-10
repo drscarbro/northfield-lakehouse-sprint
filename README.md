@@ -28,14 +28,24 @@ Week 1 — workspace is live (AWS-backed Databricks trial), Unity Catalog metast
 ```
 src/ingestion/             the three source simulators (clickstream, orders CDC, inventory)
 tests/                     pytest suite for the simulators
+scripts/                   operational scripts (cost check, etc.)
 data/raw/                  simulator output, gitignored — regenerate anytime
 docs/
   infrastructure.md        AWS + Databricks resource reference (names, ARNs, no secrets)
+  cost-guardrails.md        budget threshold, cluster policy, pre-flight cost check
   adr/                     one file per architectural decision, plus template.md
   case-studies/            the two-part portfolio narrative, plus template.md
   model-cards/             one per model, plus template.md
   data-quality-contracts/  one per pipeline stage, plus template.md
 diagrams/                  exported architecture diagrams, one per week's system state
+```
+
+## Cost guardrails
+
+This is a personal AWS account with a $100/month budget alert on it — see [docs/cost-guardrails.md](docs/cost-guardrails.md) for the threshold, the Databricks cluster policy every cluster in this project should use, and the known cost risks by week. Run this before ending any session:
+
+```
+./scripts/check_running_compute.sh
 ```
 
 ## Local dev
@@ -67,3 +77,4 @@ Every `docs/*/template.md` is reusable beyond this project — copy it for the n
 2. Build, then come back and fill in Options Considered and Evidence with what you actually measured.
 3. Move Status to `Accepted` once Evidence is real.
 4. At the end of Week 4 and Week 6, pull the accepted ADRs into the corresponding case study — don't restate them, distill them.
+5. Before closing the laptop: `./scripts/check_running_compute.sh`. Nothing should be running.
